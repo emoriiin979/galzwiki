@@ -9,9 +9,11 @@ use App\Http\Requests\BriefStoreRequest;
 use App\Http\Requests\BriefUpdateRequest;
 use App\Services\BriefService;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BriefController extends Controller
 {
+    /** @var BriefService $service */
     protected $service;
 
     public function __construct(BriefService $service)
@@ -37,7 +39,7 @@ class BriefController extends Controller
             $params['auth_user_id'] = auth()->user()->id;
         }
 
-        /** @var Collection<Brief> $briefs */
+        /** @var LengthAwarePaginator<Brief> $briefs */
         $briefs = $this->service->index($params);
 
         /** @var BriefCollection $resource */

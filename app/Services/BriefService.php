@@ -9,6 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class BriefService
 {
+    /** @var BriefRepositoryInterface $briefRepos */
     protected $briefRepos;
 
     public function __construct(
@@ -30,7 +31,7 @@ class BriefService
 
         // 親記事情報を抽出データにセット
         $briefs->through(function ($brief) {
-            /** @var Collection<Brief> $parents */
+            /** @var array<Brief> $parents */
             $parents = $this->briefRepos->findParentsRecursively($brief['id']);
             
             $brief->parents = $parents;
