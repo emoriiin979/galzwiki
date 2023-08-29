@@ -49,15 +49,4 @@ class BriefIndexRequest extends FormRequest
         $operator = $this->operator ? strtolower($this->operator) : 'and';
         $this->merge(['operator' => $operator]);
     }
-
-    /**
-     * バリデーション失敗時の処理
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        $response = response()->json([
-            'errors' => $validator->errors(),
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        throw new HttpResponseException($response);
-    }
 }

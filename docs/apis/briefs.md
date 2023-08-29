@@ -85,3 +85,62 @@ GET /briefs?keywords[0]=単語1&keywords[1]=単語2&operator=and&page=1
   ],
 }
 ```
+
+## store - 記事の登録
+
+```
+POST /briefs
+```
+
+### Requests
+
+```
+{
+  'title': 'EC2',
+  'note': 'Elastic Compute Cloud',
+  'abstract': 'Amazonが提供する計算資源を用いて...',
+  'hands_on': 'EC2の作成前に、VPCを準備します。VPCコンソールにアクセスし...',
+  'parent_brief_id': 1,
+  'entry_user_id': 1,
+  'entry_at': '2023-12-23 12:34:56',
+  'is_publish': true,
+}
+```
+
+### Response `201`
+
+```
+{
+  'message': '登録が完了しました。',
+}
+```
+
+### Response `422`
+
+```
+{
+  'errors': [
+    'title' => [
+      'titleは必ず指定してください。',
+      'titleの値は既に存在しています。',
+    ],
+    'abstract' => ['abstractは必ず指定してください。'],
+    'parent_brief_id' => [
+      'parent brief idは必ず指定してください。',
+      'parent brief idは整数で指定してください。',
+    ],
+    'entry_at' => [
+      'entry atは必ず指定してください。',
+      'entry atはY-m-d H:i:s形式で指定してください。',
+    ],
+    'entry_user_id' => [
+      'entry user idは必ず指定してください。',
+      'entry user idは整数で指定してください。',
+    ],
+    'is_publish' => [
+      'is publishは必ず指定してください。',
+      'is publishは、trueかfalseを指定してください。',
+    ],
+  ],
+}
+```

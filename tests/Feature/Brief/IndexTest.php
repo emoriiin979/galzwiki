@@ -16,6 +16,11 @@ class IndexTest extends TestCase
     /** @var string $endpoint */
     protected $endpoint = '/api/briefs';
 
+    /** @var array $headers */
+    protected $headers = [
+        'Accept' => 'application/json',
+    ];
+
     /**
      * テスト前処理
      */
@@ -40,7 +45,7 @@ class IndexTest extends TestCase
         $user = User::factory()->create();
 
         /** @var Collection<Brief> $briefs */
-        $briefs = Brief::factory(2)->sequence(
+        $briefs = Brief::factory(3)->sequence(
             [
                 'id' => 1,
                 'entry_user_id' => $user->id,
@@ -52,6 +57,13 @@ class IndexTest extends TestCase
                 'id' => 2,
                 'entry_user_id' => $user->id,
                 'entry_at' => '2023-12-23 12:34:56',
+                'parent_brief_id' => 3,
+                'is_publish' => true,
+            ],
+            [
+                'id' => 3,
+                'entry_user_id' => $user->id,
+                'entry_at' => '2023-12-23 12:34:56',
                 'is_publish' => true,
             ],
         )->create();
@@ -59,7 +71,7 @@ class IndexTest extends TestCase
         // Act
         $defaultPerPage = config('galzwiki.per_page');
         config(['galzwiki.per_page' => 1]);
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
         config(['galzwiki.per_page' => $defaultPerPage]);
 
         // Assert
@@ -75,6 +87,11 @@ class IndexTest extends TestCase
                     'id' => $briefs[1]->id,
                     'title' => $briefs[1]->title,
                     'depth' => -1,
+                ],
+                [
+                    'id' => $briefs[2]->id,
+                    'title' => $briefs[2]->title,
+                    'depth' => -2,
                 ],
             ],
         ]);
@@ -101,7 +118,7 @@ class IndexTest extends TestCase
         ]);
 
         // Act
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
 
         // Assert
         $response->assertStatus(200);
@@ -130,7 +147,7 @@ class IndexTest extends TestCase
         ]);
 
         // Act
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
 
         // Assert
         $response->assertStatus(200);
@@ -161,7 +178,7 @@ class IndexTest extends TestCase
 
         // Act
         $this->actingAs(User::find($user->id));
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
         $this->post('logout');
 
         // Assert
@@ -190,7 +207,7 @@ class IndexTest extends TestCase
         ]);
 
         // Act
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
 
         // Assert
         $response->assertStatus(200);
@@ -252,7 +269,7 @@ class IndexTest extends TestCase
         )->create();
 
         // Act
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
 
         // Assert
         $response->assertStatus(200);
@@ -293,7 +310,7 @@ class IndexTest extends TestCase
         )->create();
 
         // Act
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
 
         // Assert
         $response->assertStatus(200);
@@ -341,7 +358,7 @@ class IndexTest extends TestCase
         )->create();
 
         // Act
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
 
         // Assert
         $response->assertStatus(200);
@@ -354,38 +371,38 @@ class IndexTest extends TestCase
      * 不適切な形式のリクエストを与えたときにエラーが返されること
      * GET /briefs -> 422
      *
-     * @dataProvider index422DataProvider
+     * @dataProvider validationErrorDataProvider
      * @param string $url
-     * @param array $messages
+     * @param array $errors
      */
-    public function test_index_422($url, $messages)
+    public function test_index_422_validationError($url, $errors)
     {
         // Act
-        $response = $this->get($url);
+        $response = $this->get($url, $this->headers);
 
         // Assert
         $response->assertStatus(422);
-        $response->assertJsonPath('errors', $messages);
+        $response->assertJsonPath('errors', $errors);
     }
 
-    public function index422DataProvider()
+    public function validationErrorDataProvider()
     {
         return [
             [
                 'url' => $this->endpoint . '?keywords=0',
-                'messages' => [
+                'errors' => [
                     'keywords' => ['keywordsは配列でなくてはなりません。'],
                 ],
             ],
             [
                 'url' => $this->endpoint . '?operator=NOT',
-                'messages' => [
+                'errors' => [
                     'operator' => ['operatorには「and」か「or」のいずれかを指定してください。'],
                 ],
             ],
             [
                 'url' => $this->endpoint . '?page=X',
-                'messages' => [
+                'errors' => [
                     'page' => ['pageは整数で指定してください。'],
                 ],
             ],

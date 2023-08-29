@@ -40,7 +40,7 @@ class BriefController extends Controller
         }
 
         /** @var LengthAwarePaginator<Brief> $briefs */
-        $briefs = $this->service->index($params);
+        $briefs = $this->service->fetchByParamsWithPaginator($params);
 
         /** @var BriefCollection $resource */
         $resource = app()->make(BriefCollection::class, ['resource' => $briefs]);
@@ -61,9 +61,10 @@ class BriefController extends Controller
             'note',
             'abstract',
             'hands_on',
-            'parent_page_id',
+            'parent_brief_id',
             'entry_user_id',
             'entry_at',
+            'is_publish',
         ]));
 
         /** @var Response $response */
@@ -81,7 +82,7 @@ class BriefController extends Controller
     public function show(int $id): BriefResource
     {
         /** @var Brief $brief */
-        $brief = $this->service->show($id);
+        $brief = $this->service->fetchById($id);
 
         /** @var BriefResource $resource */
         $resource = app()->make(BriefResource::class, ['resource' => $brief]);
@@ -107,6 +108,7 @@ class BriefController extends Controller
             'parent_page_id',
             'entry_user_id',
             'entry_at',
+            'updated_at',
         ]) + ['id' => $id];
 
         $this->service->update($commitData);

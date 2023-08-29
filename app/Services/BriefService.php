@@ -3,94 +3,169 @@
 namespace App\Services;
 
 use App\Models\Brief;
-use App\Repositories\Brief\BriefRepositoryInterface;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 
 class BriefService
 {
-    /** @var BriefRepositoryInterface $briefRepos */
-    protected $briefRepos;
+    /** @var array $SEARCH_TARGETS */
+    private static $SEARCH_TARGETS = [
+        'title',
+        'note',
+        'abstract',
+        'hands_on',
+    ];
+    
+    /** @var Brief $brief */
+    protected $model;
 
-    public function __construct(
-        BriefRepositoryInterface $briefRepos
-    ) {
-        $this->briefRepos = $briefRepos;
+    public function __construct(Brief $model) {
+        $this->model = $model;
     }
 
     /**
-     * データ一覧取得
+     * 記事一覧取得(Paginator)
      *
      * @param array $params
-     * @return LengthAwarePaginator<Brief>
+     * @return LengthAwarePaginator
      */
-    public function index(array $params): LengthAwarePaginator
+    public function fetchByParamsWithPaginator(array $params): LengthAwarePaginator
     {
-        /** @var LengthAwarePaginator<Brief> $briefs */
-        $briefs = $this->briefRepos->findByParamsWithPaginator($params);
+        /** @var Builder $query */
+        $query = $this->buildQueryForFetchByParams($params);
 
-        // 親記事情報を抽出データにセット
-        $briefs->through(function ($brief) {
-            /** @var array<Brief> $parents */
-            $parents = $this->briefRepos->findParentsRecursively($brief['id']);
-            
-            $brief->parents = $parents;
-
-            return $brief;
-        });
+        /** @var LengthAwarePaginator $briefs */
+        $briefs = $query->paginate(config('galzwiki.per_page'))->appends($params);
 
         return $briefs;
     }
 
     /**
-     * データ登録
+     * 記事一覧取得用クエリ作成
+     *
+     * @param array $params
+     * @return Builder
+     */
+    private function buildQueryForFetchByParams(array $params): Builder
+    {
+        /** @var string $now */
+        $now = Carbon::now()->format('Y-m-d H:i:s');
+
+        /** @var Builder $query */
+        $query = $this->model->query();
+
+        $query->where(function ($query) use ($params, $now) {
+            // 公開中かつ投稿日が過ぎている記事のみ取得
+            $query->where(function ($query) use ($now) {
+                $query
+                    ->where('briefs.entry_at', '<=', $now)
+                    ->where('briefs.is_publish', 1);
+            });
+
+            // ログイン中は自分が投稿した全記事を取得
+            if ($authUserId = Arr::get($params, 'auth_user_id')) {
+                $query->orWhere('briefs.entry_user_id', $authUserId);
+            }
+        });
+
+        // キーワード検索
+        if ($keywords = Arr::get($params, 'keywords')) {
+            $method = $params['operator'] === 'and' ? 'where' : 'orWhere';
+            $query->where(function ($query) use ($keywords, $method) {
+                foreach ($keywords as $keyword) {
+                    $query->$method(function ($query) use ($keyword) {
+                        foreach (self::$SEARCH_TARGETS as $target) {
+                            $query->orWhere($target, 'like', '%' . $keyword . '%');
+                        }
+                    });
+                }
+            });
+        }
+
+        $query
+            ->orderBy('briefs.entry_at', 'desc')
+            ->orderBy('briefs.updated_at', 'desc');
+        
+        return $query;
+    }
+
+    /**
+     * 記事詳細取得
+     *
+     * @param int $id
+     * @return Brief
+     */
+    public function fetchById($id): Brief
+    {
+        /** @var Brief $brief */
+        $brief = $this->model->find($id);
+
+        // データが存在しない場合はエラー
+        if (!$brief) {
+            throw new NotFoundHttpException('データが存在しませんでした...');
+        }
+
+        return $brief;
+    }
+
+    /**
+     * 記事登録
      *
      * @param array $commitData
      * @return void
      */
     public function store(array $commitData): void
     {
-        $this->briefRepos->store($commitData);
+        $this->model->create($commitData);
     }
 
     /**
-     * 個別データ取得
-     *
-     * @param integer $id
-     * @return Brief
-     */
-    public function show(int $id): Brief
-    {
-        /** @var Brief $brief */
-        $brief = $this->briefRepos->findById($id);
-
-        /** @var Collection<Brief> $parents */
-        $parents = $this->briefRepos->findParentsRecursively($id);
-
-        $brief->parents = $parents;
-
-        return $brief;
-    }
-
-    /**
-     * データ更新
+     * 記事更新
      *
      * @param array $commitData
      * @return void
      */
     public function update(array $commitData): void
     {
-        $this->briefRepos->update($commitData);
+        /** @var Brief $existData */
+        $existData = $this->model->find($commitData['id']);
+
+        // データが存在しない場合はエラー
+        if (!$existData) {
+            throw new NotFoundHttpException('データが存在しませんでした...');
+        }
+
+        // 更新日時が一致しない場合はエラー
+        if ($existData->updated_at !== $commitData['updated_at']) {
+            $message = <<<EOT
+                別ユーザーによってデータが更新されています...
+                ページを読み込み直して再度更新処理を実行してください...
+            EOT;
+            throw new ConflictHttpException($message);
+        }
+
+        $existData->fill($commitData)->save();
     }
 
     /**
-     * データ削除
+     * 記事削除
      *
      * @param integer $id
      * @return void
      */
     public function delete(int $id): void
     {
-        $this->briefRepos->delete($id);
+        /** @var Brief $existData */
+        $existData = $this->model->find($id);
+
+        // データが存在しない場合はエラー
+        if (!$existData) {
+            throw new NotFoundHttpException('データが存在しませんでした...');
+        }
+
+        $existData->delete();
     }
 }
