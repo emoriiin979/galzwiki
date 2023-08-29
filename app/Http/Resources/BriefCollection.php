@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Brief;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -22,16 +23,33 @@ class BriefCollection extends ResourceCollection
                 'note' => $row->note,
                 'entry_at' => $row->entry_at,
                 'is_publish' => (bool)$row->is_publish,
-                'parents' => $row->parents
-                    ? array_map(function ($parent, $index) {
-                        return [
-                            'id' => (int)$parent->id,
-                            'title' => $parent->title,
-                            'depth' => $index * (-1),
-                        ];
-                    }, $row->parents, range(1, count($row->parents)))
-                    : [],
+                'parents' => $this->fetchParents($row),
             ];
         })->toArray();
+    }
+
+    /**
+     * 親記事取得
+     *
+     * @param BriefResource $brief
+     * @return array
+     */
+    private function fetchParents(BriefResource $brief): array
+    {
+        $index = 0;
+        $parents = [];
+        $parent = $brief->parent;
+
+        while ($parent) {
+            $index -= 1;
+            $parents[] = [
+                'id' => $parent->id,
+                'title' => $parent->title,
+                'depth' => $index,
+            ];
+            $parent = $parent->parent;
+        }
+
+        return $parents;
     }
 }

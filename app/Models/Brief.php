@@ -20,6 +20,10 @@ class Brief extends Model
         'deleted_at',
     ];
 
+    protected $casts = [
+        'is_publish' => 'bool',
+    ];
+
     /**
      * 登録日時取得
      *
@@ -28,5 +32,13 @@ class Brief extends Model
     public function getEntryAtAttribute($value)
     {
         return $value ? Carbon::parse($value)->format('Y-m-d H:i:s') : null;
+    }
+
+    /**
+     * 親記事取得
+     */
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_brief_id');
     }
 }
