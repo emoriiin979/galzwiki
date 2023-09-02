@@ -2,27 +2,26 @@
 
 namespace App\Services;
 
-use App\Models\Brief;
+use App\Models\Entry;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 
-class BriefService
+class EntryService
 {
     /** @var array $SEARCH_TARGETS */
     private static $SEARCH_TARGETS = [
         'title',
-        'note',
-        'abstract',
-        'hands_on',
+        'subtitle',
+        'body',
     ];
     
-    /** @var Brief $brief */
+    /** @var Entry $entry */
     protected $model;
 
-    public function __construct(Brief $model) {
+    public function __construct(Entry $model) {
         $this->model = $model;
     }
 
@@ -37,10 +36,10 @@ class BriefService
         /** @var Builder $query */
         $query = $this->buildQueryForFetchByParams($params);
 
-        /** @var LengthAwarePaginator $briefs */
-        $briefs = $query->paginate(config('galzwiki.per_page'))->appends($params);
+        /** @var LengthAwarePaginator $entries */
+        $entries = $query->paginate(config('galzwiki.per_page'))->appends($params);
 
-        return $briefs;
+        return $entries;
     }
 
     /**
@@ -61,13 +60,13 @@ class BriefService
             // 公開中かつ投稿日が過ぎている記事のみ取得
             $query->where(function ($query) use ($now) {
                 $query
-                    ->where('briefs.entry_at', '<=', $now)
-                    ->where('briefs.is_publish', 1);
+                    ->where('entries.post_at', '<=', $now)
+                    ->where('entries.is_publish', 1);
             });
 
             // ログイン中は自分が投稿した全記事を取得
             if ($authUserId = Arr::get($params, 'auth_user_id')) {
-                $query->orWhere('briefs.entry_user_id', $authUserId);
+                $query->orWhere('entries.post_user_id', $authUserId);
             }
         });
 
@@ -86,8 +85,8 @@ class BriefService
         }
 
         $query
-            ->orderBy('briefs.entry_at', 'desc')
-            ->orderBy('briefs.updated_at', 'desc');
+            ->orderBy('entries.post_at', 'desc')
+            ->orderBy('entries.updated_at', 'desc');
         
         return $query;
     }
@@ -96,14 +95,14 @@ class BriefService
      * 記事詳細取得
      *
      * @param int $id
-     * @return Brief
+     * @return Entry
      */
-    public function fetchById($id): Brief
+    public function fetchById($id): Entry
     {
-        /** @var Brief $brief */
-        $brief = $this->model->findOrFail($id);
+        /** @var Entry $entry */
+        $entry = $this->model->findOrFail($id);
 
-        return $brief;
+        return $entry;
     }
 
     /**
@@ -125,7 +124,7 @@ class BriefService
      */
     public function update(array $commitData): void
     {
-        /** @var Brief $existData */
+        /** @var Entry $existData */
         $existData = $this->model->find($commitData['id']);
 
         // データが存在しない場合はエラー
@@ -153,7 +152,7 @@ class BriefService
      */
     public function delete(int $id): void
     {
-        /** @var Brief $existData */
+        /** @var Entry $existData */
         $existData = $this->model->find($id);
 
         // データが存在しない場合はエラー

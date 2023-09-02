@@ -1,29 +1,29 @@
-# 記事API
+# 事項API
 
 ## エンドポイント一覧
 
 ||GET|POST|PUT|DELETE|
 |:--|:--|:--|:--|:--|
-|/briefs|index|store|||
-|/briefs/{id}|show||update|delete|
+|/entries|index|store|||
+|/entries/{id}|show||update|delete|
 
-## index - 記事一覧の取得
+## index - 事項一覧の取得
 
 ```
-GET /briefs?keywords[0]=単語1&keywords[1]=単語2&operator=and&page=1
+GET /entries?keywords[0]=単語1&keywords[1]=単語2&operator=and&page=1
 ```
 
 ### Rules
 
-- `公開中`かつ`投稿日時が当日以降`の記事のみ取得する
-- ログイン中の場合は`自分が投稿した記事`も取得できる
+- `公開中`かつ`投稿日時が当日以降`の事項のみ取得する
+- ログイン中の場合は`自分が投稿した事項`も取得できる
 - 1ページに取得するデータ数は`10件`とする（ページネーション機能を使う）
 - ソート順は優先度が高い順に、`投稿日時`の降順、`更新日時`の降順とする
 
 ### Parameters
 
 - keywords : `array` (optional)
-  - `タイトル`、`補足`、`概要文`、`ハンズオン`について部分一致で検索する
+  - `題名`、`補題`、`本文`について部分一致で検索する
 - operator : `string` (optional)
   - キーワード検索の検索方式（AND検索/OR検索）を指定できる
   - `and`または`or`のみ指定可能
@@ -39,8 +39,8 @@ GET /briefs?keywords[0]=単語1&keywords[1]=単語2&operator=and&page=1
     {
       'id': 3,
       'title': 'EC2',
-      'note': 'Elastic Compute Cloud',
-      'entry_date': '2023-12-23',
+      'subtitle': 'Elastic Compute Cloud',
+      'post_at': '2023-12-23 12:00:00',
       'is_publish': true,
       'parents': [
         {
@@ -57,16 +57,16 @@ GET /briefs?keywords[0]=単語1&keywords[1]=単語2&operator=and&page=1
     },
   ],
   'links': {
-    'first': 'https://emolab.jp/api/briefs?page=1',
-    'last': 'https://emolab.jp/api/briefs?page=12',
-    'prev': 'https://emolab.jp/api/briefs?page=11',
+    'first': 'https://emolab.jp/api/entries?page=1',
+    'last': 'https://emolab.jp/api/entries?page=12',
+    'prev': 'https://emolab.jp/api/entries?page=11',
     'next': '',
   },
   'meta': {
     'current_page': 12,
     'from': 111,
     'last_page': 12,
-    'path': 'https://emolab.jp/api/briefs',
+    'path': 'https://emolab.jp/api/entries',
     'per_page': 10,
     'to': 111,
     'total': 111,
@@ -86,10 +86,10 @@ GET /briefs?keywords[0]=単語1&keywords[1]=単語2&operator=and&page=1
 }
 ```
 
-## store - 記事の登録
+## store - 事項の登録
 
 ```
-POST /briefs
+POST /entries
 ```
 
 ### Requests
@@ -97,12 +97,11 @@ POST /briefs
 ```
 {
   'title': 'EC2',
-  'note': 'Elastic Compute Cloud',
-  'abstract': 'Amazonが提供する計算資源を用いて...',
-  'hands_on': 'EC2の作成前に、VPCを準備します。VPCコンソールにアクセスし...',
-  'parent_brief_id': 1,
-  'entry_user_id': 1,
-  'entry_at': '2023-12-23 12:34:56',
+  'subtitle': 'Elastic Compute Cloud',
+  'body': 'Amazonが提供する計算資源を用いて...',
+  'parent_entry_id': 1,
+  'post_user_id': 1,
+  'post_at': '2023-12-23 12:34:56',
   'is_publish': true,
 }
 ```
@@ -124,18 +123,20 @@ POST /briefs
       'titleは必ず指定してください。',
       'titleの値は既に存在しています。',
     ],
-    'abstract' => ['abstractは必ず指定してください。'],
-    'parent_brief_id' => [
-      'parent brief idは必ず指定してください。',
-      'parent brief idは整数で指定してください。',
+    'body' => [
+      'bodyは必ず指定してください。'
     ],
-    'entry_at' => [
-      'entry atは必ず指定してください。',
-      'entry atはY-m-d H:i:s形式で指定してください。',
+    'parent_entry_id' => [
+      'parent entry idは必ず指定してください。',
+      'parent entry idは整数で指定してください。',
     ],
-    'entry_user_id' => [
-      'entry user idは必ず指定してください。',
-      'entry user idは整数で指定してください。',
+    'post_user_id' => [
+      'post user idは必ず指定してください。',
+      'post user idは整数で指定してください。',
+    ],
+    'post_at' => [
+      'post atは必ず指定してください。',
+      'post atはY-m-d H:i:s形式で指定してください。',
     ],
     'is_publish' => [
       'is publishは必ず指定してください。',
@@ -145,10 +146,10 @@ POST /briefs
 }
 ```
 
-## show - 記事詳細の取得
+## show - 事項詳細の取得
 
 ```
-GET /briefs/{id}
+GET /entries/{id}
 ```
 
 ### Parameters
@@ -161,10 +162,10 @@ GET /briefs/{id}
 {
   'id': 3,
   'title': 'EC2',
-  'note': 'Elastic Compute Cloud',
-  'abstract': 'Amazonが提供する計算資源を用いて...',
-  'entry_user_id': 1,
-  'entry_at': '2023-12-23 12:00:00',
+  'subtitle': 'Elastic Compute Cloud',
+  'body': 'Amazonが提供する計算資源を用いて...',
+  'post_user_id': 1,
+  'post_at': '2023-12-23 12:00:00',
   'is_publish': true,
   'parents': [
     {

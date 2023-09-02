@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BriefCollection;
-use App\Http\Resources\BriefResource;
-use App\Http\Requests\BriefIndexRequest;
-use App\Http\Requests\BriefStoreRequest;
-use App\Http\Requests\BriefUpdateRequest;
-use App\Services\BriefService;
+use App\Http\Resources\EntryCollection;
+use App\Http\Resources\EntryResource;
+use App\Http\Requests\EntryIndexRequest;
+use App\Http\Requests\EntryStoreRequest;
+use App\Http\Requests\EntryUpdateRequest;
+use App\Services\EntryService;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class BriefController extends Controller
+class EntryController extends Controller
 {
-    /** @var BriefService $service */
+    /** @var EntryService $service */
     protected $service;
 
-    public function __construct(BriefService $service)
+    public function __construct(EntryService $service)
     {
         $this->service = $service;
     }
@@ -24,10 +24,10 @@ class BriefController extends Controller
     /**
      * 記事一覧の取得
      * 
-     * @param BriefIndexRequest $request
-     * @return BriefCollection
+     * @param EntryIndexRequest $request
+     * @return EntryCollection
      */
-    public function index(BriefIndexRequest $request): BriefCollection
+    public function index(EntryIndexRequest $request): EntryCollection
     {
         /** @var array $params */
         $params = $request->only([
@@ -39,11 +39,11 @@ class BriefController extends Controller
             $params['auth_user_id'] = auth()->user()->id;
         }
 
-        /** @var LengthAwarePaginator<Brief> $briefs */
-        $briefs = $this->service->fetchByParamsWithPaginator($params);
+        /** @var LengthAwarePaginator $entries */
+        $entries = $this->service->fetchByParamsWithPaginator($params);
 
-        /** @var BriefCollection $resource */
-        $resource = app()->make(BriefCollection::class, ['resource' => $briefs]);
+        /** @var EntryCollection $resource */
+        $resource = app()->make(EntryCollection::class, ['resource' => $entries]);
 
         return $resource;
     }
@@ -51,19 +51,18 @@ class BriefController extends Controller
     /**
      * 記事の登録
      * 
-     * @param BriefStoreRequest $request
+     * @param EntryStoreRequest $request
      * @return Response
      */
-    public function store(BriefStoreRequest $request): Response
+    public function store(EntryStoreRequest $request): Response
     {
         $this->service->store($request->only([
             'title',
-            'note',
-            'abstract',
-            'hands_on',
-            'parent_brief_id',
-            'entry_user_id',
-            'entry_at',
+            'subtitle',
+            'body',
+            'parent_entry_id',
+            'post_user_id',
+            'post_at',
             'is_publish',
         ]));
 
@@ -77,15 +76,15 @@ class BriefController extends Controller
      * 記事詳細の取得
      * 
      * @param int $id
-     * @return BriefResource
+     * @return EntryResource
      */
-    public function show(int $id): BriefResource
+    public function show(int $id): EntryResource
     {
-        /** @var Brief $brief */
-        $brief = $this->service->fetchById($id);
+        /** @var Entry $entry */
+        $entry = $this->service->fetchById($id);
 
-        /** @var BriefResource $resource */
-        $resource = app()->make(BriefResource::class, ['resource' => $brief]);
+        /** @var EntryResource $resource */
+        $resource = app()->make(EntryResource::class, ['resource' => $entry]);
 
         return $resource;
     }
@@ -93,21 +92,21 @@ class BriefController extends Controller
     /**
      * 記事の更新
      * 
-     * @param BriefUpdateRequest $request
+     * @param EntryUpdateRequest $request
      * @param int $id
      * @return Response
      */
-    public function update(BriefUpdateRequest $request, int $id): Response
+    public function update(EntryUpdateRequest $request, int $id): Response
     {
         /** @var array $commitData */
         $commitData = $request->only([
             'title',
-            'note',
-            'abstract',
-            'hands_on',
-            'parent_page_id',
-            'entry_user_id',
-            'entry_at',
+            'subtitle',
+            'body',
+            'parent_entry_id',
+            'post_user_id',
+            'post_at',
+            'is_publish',
             'updated_at',
         ]) + ['id' => $id];
 

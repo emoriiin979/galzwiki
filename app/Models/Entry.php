@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Brief extends Model
+class Entry extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'briefs';
+    protected $table = 'entries';
 
     protected $guarded = [
         'id',
@@ -39,6 +39,6 @@ class Brief extends Model
      */
     public function parent()
     {
-        return $this->belongsTo(self::class, 'parent_brief_id');
+        return $this->belongsTo(self::class, 'parent_entry_id');
     }
 }

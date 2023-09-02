@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BriefUpdateRequest extends FormRequest
+class EntryUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,14 @@ class BriefUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'           => ['string', 'required', 'unique:briefs'],
-            'note'            => ['string'],
-            'abstract'        => ['string', 'required'],
-            'hands_on'        => ['string'],
-            'parent_brief_id' => ['integer', 'required'],
-            'user_id'         => ['integer', 'required'],
+            'title'           => ['string', 'required', 'unique:entries'],
+            'subtitle'        => ['string'],
+            'body'            => ['string', 'required'],
+            'parent_entry_id' => ['integer', 'required'],
+            'post_user_id'    => ['integer', 'required'],
+            'post_at'         => ['date_format:Y-m-d H:i:s', 'required'],
             'is_publish'      => ['boolean', 'required'],
+            'updated_at'      => ['date_format:Y-m-d H:i:s', 'required'],
         ];
     }
 }

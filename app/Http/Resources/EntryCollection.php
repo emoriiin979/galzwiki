@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Brief;
+use App\Models\Entry;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class BriefCollection extends ResourceCollection
+class EntryCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -20,8 +20,8 @@ class BriefCollection extends ResourceCollection
             return [
                 'id' => (int)$row->id,
                 'title' => $row->title,
-                'note' => $row->note,
-                'entry_at' => $row->entry_at,
+                'subtitle' => $row->subtitle,
+                'post_at' => $row->post_at,
                 'is_publish' => (bool)$row->is_publish,
                 'parents' => $this->fetchParents($row),
             ];
@@ -31,14 +31,14 @@ class BriefCollection extends ResourceCollection
     /**
      * 親記事取得
      *
-     * @param BriefResource $brief
+     * @param EntryResource $entry
      * @return array
      */
-    private function fetchParents(BriefResource $brief): array
+    private function fetchParents(EntryResource $entry): array
     {
         $index = 0;
         $parents = [];
-        $parent = $brief->parent;
+        $parent = $entry->parent;
 
         while ($parent) {
             $index -= 1;
