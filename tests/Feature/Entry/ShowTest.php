@@ -89,18 +89,32 @@ class ShowTest extends TestCase
     /**
      * 記事詳細取得 異常系テスト
      * 存在しないIDが指定された場合はエラーが返されること
-     * GET /entries/{id} -> 404
+     * GET /entries/{id} -> 404|405
+     *
+     * @dataProvider notFoundDataProvider
+     * @param string $url
+     * @param int $errorCode
      */
-    public function test_show_404_notFound(): void
+    public function test_show_404_notFound($url, $errorCode): void
     {
-        // Arrange
-        /** @var string $url */
-        $url = $this->endpoint . '/999';
-
         // Act
         $response = $this->get($url, $this->headers);
 
         // Assert
-        $response->assertStatus(404);
+        $response->assertStatus($errorCode);
+    }
+
+    public function notFoundDataProvider(): array
+    {
+        return [
+            [
+                'url' => $this->endpoint . '/X',
+                'errorCode' => 405,
+            ],
+            [
+                'url' => $this->endpoint . '/999',
+                'errorCode' => 404,
+            ],
+        ];
     }
 }

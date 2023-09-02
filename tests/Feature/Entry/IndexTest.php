@@ -102,7 +102,7 @@ class IndexTest extends TestCase
      * 投稿日時が過ぎていない事項が取得できないこと
      * GET /entries -> 200
      */
-    public function test_index_200_filterBeforePublishEntry()
+    public function test_index_200_filterBeforePublishEntry(): void
     {
         // Arrange
         /** @var string $url */
@@ -131,7 +131,7 @@ class IndexTest extends TestCase
      * 未公開事項が取得できないこと
      * GET /entries -> 200
      */
-    public function test_index_200_filterUnpublishEntry()
+    public function test_index_200_filterUnpublishEntry(): void
     {
         // Arrange
         /** @var string $url */
@@ -160,7 +160,7 @@ class IndexTest extends TestCase
      * ログイン時は自分の未公開事項が取得できること
      * GET /entries -> 200
      */
-    public function test_index_200_getMyEntry()
+    public function test_index_200_getMyEntry(): void
     {
         // Arrange
         /** @var string $url */
@@ -192,7 +192,7 @@ class IndexTest extends TestCase
      * 削除済み事項が取得できないこと
      * GET /entries -> 200
      */
-    public function test_index_200_filterDeletedEntry()
+    public function test_index_200_filterDeletedEntry(): void
     {
         // Arrange
         /** @var string $url */
@@ -220,7 +220,7 @@ class IndexTest extends TestCase
      * 単数キーワードで絞り込みできること
      * GET /entries -> 200
      */
-    public function test_index_200_filterSingleKeyword()
+    public function test_index_200_filterSingleKeyword(): void
     {
         // Arrange
         /** @var string $url */
@@ -271,7 +271,7 @@ class IndexTest extends TestCase
      * キーワードでAND検索できること
      * GET /entries -> 200
      */
-    public function test_index_200_filterKeywordsByAndSearch()
+    public function test_index_200_filterKeywordsByAndSearch(): void
     {
         // Arrange
         /** @var string $url */
@@ -310,7 +310,7 @@ class IndexTest extends TestCase
      * キーワードでOR検索できること
      * GET /entries -> 200
      */
-    public function test_index_200_filterKeywordsByOrSearch()
+    public function test_index_200_filterKeywordsByOrSearch(): void
     {
         // Arrange
         /** @var string $url */
@@ -359,7 +359,7 @@ class IndexTest extends TestCase
      * @param string $url
      * @param array $errors
      */
-    public function test_index_422_validationError($url, $errors)
+    public function test_index_422_validationError($url, $errors): void
     {
         // Act
         $response = $this->get($url, $this->headers);
@@ -369,7 +369,7 @@ class IndexTest extends TestCase
         $response->assertJsonPath('errors', $errors);
     }
 
-    public function validationErrorDataProvider()
+    public function validationErrorDataProvider(): array
     {
         return [
             [

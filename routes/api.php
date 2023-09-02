@@ -19,6 +19,7 @@ Route::group(['prefix' => 'entries', 'as' => 'entries.'], function () {
     Route::get('/', [EntryController::class, 'index'])
         ->name('index');
     Route::get('/{id}', [EntryController::class, 'show'])
+        ->where(['id' => '[0-9]+'])
         ->name('show');
 });
 
