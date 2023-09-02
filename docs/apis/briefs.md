@@ -144,3 +144,49 @@ POST /briefs
   ],
 }
 ```
+
+## show - 記事詳細の取得
+
+```
+GET /briefs/{id}
+```
+
+### Parameters
+
+- id: `number` (required)
+
+### Response `200`
+
+```
+{
+  'id': 3,
+  'title': 'EC2',
+  'note': 'Elastic Compute Cloud',
+  'abstract': 'Amazonが提供する計算資源を用いて...',
+  'entry_user_id': 1,
+  'entry_at': '2023-12-23 12:00:00',
+  'is_publish': true,
+  'parents': [
+    {
+      'id': 2,
+      'title': 'AWS',
+      'depth': -1,
+    },
+    {
+      'id': 1,
+      'title': 'IT',
+      'depth': -2,
+    },
+  ],
+}
+```
+
+### Response `404`
+
+```
+{
+  'errors': [
+    'データが存在しません',
+  ],
+}
+```

@@ -31,11 +31,11 @@ class IndexTest extends TestCase
     }
 
     /**
-     * データ一覧取得 正常系テスト
+     * 記事一覧取得 正常系テスト
      * レスポンスデータが正しく格納されていること
      * GET /briefs -> 200
      */
-    public function test_index_200_fillResponseData()
+    public function test_index_200_fillResponseData(): void
     {
         // Arrange
         /** @var string $url */

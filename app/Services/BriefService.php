@@ -101,12 +101,7 @@ class BriefService
     public function fetchById($id): Brief
     {
         /** @var Brief $brief */
-        $brief = $this->model->find($id);
-
-        // データが存在しない場合はエラー
-        if (!$brief) {
-            throw new NotFoundHttpException('データが存在しませんでした...');
-        }
+        $brief = $this->model->findOrFail($id);
 
         return $brief;
     }

@@ -25,7 +25,7 @@ class StoreTest extends TestCase
      * コミット用データが正しく登録されること
      * POST /briefs -> 201
      */
-    public function test_store_201()
+    public function test_store_201(): void
     {
         // Arrange
         /** @var User $user */
@@ -58,7 +58,7 @@ class StoreTest extends TestCase
      * ログインしていない場合はエラーが返されること
      * POST /briefs -> 401
      */
-    public function test_store_401()
+    public function test_store_401(): void
     {
         // Act
         $response = $this->post($this->endpoint, [], $this->headers);
@@ -76,7 +76,7 @@ class StoreTest extends TestCase
      * @param array $commitData
      * @param array $errors
      */
-    public function test_store_422_validationError($commitData, $errors)
+    public function test_store_422_validationError($commitData, $errors): void
     {
         // Arrange
         /** @var User $user */
@@ -92,7 +92,7 @@ class StoreTest extends TestCase
         $response->assertJsonPath('errors', $errors);
     }
 
-    public function validationErrorDataProvider()
+    public function validationErrorDataProvider(): array
     {
         return [
             [
@@ -130,7 +130,7 @@ class StoreTest extends TestCase
      * 登録済みのタイトルと重複していたときにエラーが返されること
      * POST /briefs -> 422
      */
-    public function test_store_422_duplicatedTitle()
+    public function test_store_422_duplicatedTitle(): void
     {
         // Arrange
         /** @var User $user */
