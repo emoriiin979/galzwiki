@@ -103,9 +103,6 @@ class EntryController extends Controller
             'title',
             'subtitle',
             'body',
-            'parent_entry_id',
-            'post_user_id',
-            'post_at',
             'is_publish',
             'updated_at',
         ]) + ['id' => $id];

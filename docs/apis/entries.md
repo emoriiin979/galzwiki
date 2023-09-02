@@ -2,7 +2,7 @@
 
 ## エンドポイント一覧
 
-||GET|POST|PUT|DELETE|
+||GET|POST|PATCH|DELETE|
 |:--|:--|:--|:--|:--|
 |/entries|index|store|||
 |/entries/{id}|show||update|delete|
@@ -119,26 +119,26 @@ POST /entries
 ```
 {
   'errors': [
-    'title' => [
+    'title': [
       'titleは必ず指定してください。',
       'titleの値は既に存在しています。',
     ],
-    'body' => [
+    'body': [
       'bodyは必ず指定してください。'
     ],
-    'parent_entry_id' => [
+    'parent_entry_id': [
       'parent entry idは必ず指定してください。',
       'parent entry idは整数で指定してください。',
     ],
-    'post_user_id' => [
+    'post_user_id': [
       'post user idは必ず指定してください。',
       'post user idは整数で指定してください。',
     ],
-    'post_at' => [
+    'post_at': [
       'post atは必ず指定してください。',
       'post atはY-m-d H:i:s形式で指定してください。',
     ],
-    'is_publish' => [
+    'is_publish': [
       'is publishは必ず指定してください。',
       'is publishは、trueかfalseを指定してください。',
     ],
@@ -188,6 +188,82 @@ GET /entries/{id}
 {
   'errors': [
     'データが存在しません',
+  ],
+}
+```
+
+## update - 事項の更新
+
+```
+PATCH /entries/{id}
+```
+
+### Requests
+
+```
+{
+  'title': 'EC2',
+  'subtitle': 'Elastic Compute Cloud',
+  'body': 'Amazonが提供する計算資源を用いて...',
+  'is_publish': true,
+  'updated_at': '2023-12-23 12:34:56',
+}
+```
+
+### Response `204`
+
+```
+(No Contents)
+```
+
+### Response `404`
+
+```
+{
+  'message': 'データが存在しません。',
+}
+```
+
+### Response `409`
+
+```
+{
+  'message': '別ユーザーによってデータが更新されています。\nページをリロードして再度更新処理を実行してください。',
+}
+```
+
+### Response `422`
+
+```
+{
+  'errors': [
+    'title': [
+      'titleは必ず指定してください。',
+      'titleの値は既に存在しています。',
+    ],
+    'body': [
+      'bodyは必ず指定してください。',
+    ],
+    'parent_entry_id': [
+      'parent entry idは必ず指定してください。',
+      'parent entry idは整数で指定してください。',
+    ],
+    'post_user_id': [
+      'post user idは必ず指定してください。',
+      'post user idは整数で指定してください。',
+    ],
+    'post_at': [
+      'post atは必ず指定してください。',
+      'post atはY-m-d H:i:s形式で指定してください。',
+    ],
+    'is_publish': [
+      'is publishは必ず指定してください。',
+      'is publishは、trueかfalseを指定してください。',
+    ],
+    'updated_at': [
+      'updated atは必ず指定してください。',
+      'updated atはY-m-d H:i:s形式で指定してください。',
+    ],
   ],
 }
 ```

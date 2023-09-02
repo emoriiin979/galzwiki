@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class EntryUpdateRequest extends FormRequest
 {
@@ -22,12 +23,9 @@ class EntryUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'           => ['string', 'required', 'unique:entries'],
+            'title'           => ['string', 'required', Rule::unique('entries')->ignore($this->id)],
             'subtitle'        => ['string'],
             'body'            => ['string', 'required'],
-            'parent_entry_id' => ['integer', 'required'],
-            'post_user_id'    => ['integer', 'required'],
-            'post_at'         => ['date_format:Y-m-d H:i:s', 'required'],
             'is_publish'      => ['boolean', 'required'],
             'updated_at'      => ['date_format:Y-m-d H:i:s', 'required'],
         ];
