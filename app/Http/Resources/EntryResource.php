@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BriefResource extends JsonResource
+class EntryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,10 @@ class BriefResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'note' => $this->note,
-            'abstract' => $this->abstract,
-            'entry_user_id' => $this->entry_user_id,
-            'entry_at' => $this->entry_at,
+            'subtitle' => $this->subtitle,
+            'body' => $this->body,
+            'post_user_id' => $this->post_user_id,
+            'post_at' => $this->post_at,
             'is_publish' => $this->is_publish,
             'parents' => $this->fetchParents($this),
         ];
@@ -29,14 +29,14 @@ class BriefResource extends JsonResource
     /**
      * 親記事取得
      *
-     * @param BriefResource $brief
+     * @param EntryResource $entry
      * @return array
      */
-    private function fetchParents(BriefResource $brief): array
+    private function fetchParents(EntryResource $entry): array
     {
         $index = 0;
         $parents = [];
-        $parent = $brief->parent;
+        $parent = $entry->parent;
 
         while ($parent) {
             $index -= 1;

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\BriefController;
+use App\Http\Controllers\EntryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'briefs', 'as' => 'briefs.'], function () {
-    Route::get('/', [BriefController::class, 'index'])
+Route::group(['prefix' => 'entries', 'as' => 'entries.'], function () {
+    Route::get('/', [EntryController::class, 'index'])
         ->name('index');
-    Route::get('/{id}', [BriefController::class, 'show'])
+    Route::get('/{id}', [EntryController::class, 'show'])
         ->name('show');
 });
 
@@ -26,12 +26,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::group(['prefix' => 'briefs', 'as' => 'briefs.'], function () {
-        Route::post('/', [BriefController::class, 'store'])
+    Route::group(['prefix' => 'entries', 'as' => 'entries.'], function () {
+        Route::post('/', [EntryController::class, 'store'])
             ->name('store');
-        Route::put('/{id}', [BriefController::class, 'update'])
+        Route::put('/{id}', [EntryController::class, 'update'])
             ->name('update');
-        Route::delete('/{id}', [BriefController::class, 'delete'])
+        Route::delete('/{id}', [EntryController::class, 'delete'])
             ->name('delete');
     });
 });
