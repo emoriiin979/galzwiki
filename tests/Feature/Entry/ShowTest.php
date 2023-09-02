@@ -21,7 +21,7 @@ class ShowTest extends TestCase
     ];
 
     /**
-     * 記事詳細取得 正常系テスト
+     * 事項詳細取得 正常系テスト
      * レスポンスデータが正しく格納されていること
      * GET /entries/{id} -> 200
      */
@@ -87,7 +87,7 @@ class ShowTest extends TestCase
     }
 
     /**
-     * 記事詳細取得 異常系テスト
+     * 事項詳細取得 異常系テスト
      * 存在しないIDが指定された場合はエラーが返されること
      * GET /entries/{id} -> 404|405
      *

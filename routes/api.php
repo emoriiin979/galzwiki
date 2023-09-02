@@ -30,7 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'entries', 'as' => 'entries.'], function () {
         Route::post('/', [EntryController::class, 'store'])
             ->name('store');
-        Route::put('/{id}', [EntryController::class, 'update'])
+        Route::patch('/{id}', [EntryController::class, 'update'])
+            ->where(['id' => '[0-9]+'])
             ->name('update');
         Route::delete('/{id}', [EntryController::class, 'delete'])
             ->name('delete');

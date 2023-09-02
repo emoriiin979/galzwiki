@@ -35,6 +35,16 @@ class Entry extends Model
     }
 
     /**
+     * 更新日時取得
+     *
+     * @return string 更新日時(Y-m-d H:i:s形式)
+     */
+    public function getUpdatedAtAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('Y-m-d H:i:s') : null;
+    }
+
+    /**
      * 親記事取得
      */
     public function parent()

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class EntryService
 {
@@ -125,18 +126,13 @@ class EntryService
     public function update(array $commitData): void
     {
         /** @var Entry $existData */
-        $existData = $this->model->find($commitData['id']);
-
-        // データが存在しない場合はエラー
-        if (!$existData) {
-            throw new NotFoundHttpException('データが存在しませんでした...');
-        }
+        $existData = $this->model->findOrFail($commitData['id']);
 
         // 更新日時が一致しない場合はエラー
         if ($existData->updated_at !== $commitData['updated_at']) {
             $message = <<<EOT
-                別ユーザーによってデータが更新されています...
-                ページを読み込み直して再度更新処理を実行してください...
+                別ユーザーによってデータが更新されています。
+                ページを読み込み直して再度更新処理を実行してください。
             EOT;
             throw new ConflictHttpException($message);
         }
