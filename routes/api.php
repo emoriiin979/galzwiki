@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
             ->where(['id' => '[0-9]+'])
             ->name('update');
         Route::delete('/{id}', [EntryController::class, 'delete'])
+            ->where(['id' => '[0-9]+'])
             ->name('delete');
     });
 });

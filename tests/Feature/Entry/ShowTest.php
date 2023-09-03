@@ -89,15 +89,14 @@ class ShowTest extends TestCase
      *
      * @dataProvider notFoundDataProvider
      * @param string $url
-     * @param int $errorCode
      */
-    public function test_show_404_notFound($url, $errorCode): void
+    public function test_show_404_notFound($url): void
     {
         // Act
         $response = $this->get($url, $this->headers);
 
         // Assert
-        $response->assertStatus($errorCode);
+        $response->assertStatus(404);
     }
 
     public function notFoundDataProvider(): array
@@ -105,11 +104,9 @@ class ShowTest extends TestCase
         return [
             [
                 'url' => $this->endpoint . '/X',
-                'errorCode' => 405,
             ],
             [
                 'url' => $this->endpoint . '/999',
-                'errorCode' => 404,
             ],
         ];
     }

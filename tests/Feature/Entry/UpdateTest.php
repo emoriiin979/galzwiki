@@ -87,9 +87,8 @@ class UpdateTest extends TestCase
      *
      * @dataProvider notFoundDataProvider
      * @param string $url
-     * @param int $errorCode
      */
-    public function test_update_404_notFound($url, $errorCode): void
+    public function test_update_404_notFound($url): void
     {
         // Arrange
         /** @var User $user */
@@ -109,7 +108,7 @@ class UpdateTest extends TestCase
         $this->post('logout');
 
         // Assert
-        $response->assertStatus($errorCode);
+        $response->assertStatus(404);
     }
 
     public function notFoundDataProvider(): array
@@ -117,11 +116,9 @@ class UpdateTest extends TestCase
         return [
             [
                 'url' => $this->endpoint . '/X',
-                'errorCode' => 405,
             ],
             [
                 'url' => $this->endpoint . '/999',
-                'errorCode' => 404,
             ],
         ];
     }

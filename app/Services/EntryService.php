@@ -140,12 +140,7 @@ class EntryService
     public function delete(int $id): void
     {
         /** @var Entry $existData */
-        $existData = $this->model->find($id);
-
-        // データが存在しない場合はエラー
-        if (!$existData) {
-            throw new NotFoundHttpException('データが存在しませんでした...');
-        }
+        $existData = $this->model->findOrFail($id);
 
         $existData->delete();
     }
