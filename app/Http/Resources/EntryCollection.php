@@ -21,7 +21,6 @@ class EntryCollection extends ResourceCollection
                 'id' => (int)$row->id,
                 'title' => $row->title,
                 'subtitle' => $row->subtitle,
-                'post_at' => $row->post_at,
                 'is_publish' => (bool)$row->is_publish,
                 'parents' => $this->fetchParents($row),
             ];

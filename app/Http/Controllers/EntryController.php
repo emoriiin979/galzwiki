@@ -62,7 +62,6 @@ class EntryController extends Controller
             'body',
             'parent_entry_id',
             'post_user_id',
-            'post_at',
             'is_publish',
         ]));
 

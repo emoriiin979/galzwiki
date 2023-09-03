@@ -38,7 +38,6 @@ class StoreTest extends TestCase
             'body' => 'Amazonが提供する計算資源を用いて...',
             'parent_entry_id' => 1,
             'post_user_id' => $user->id,
-            'post_at' => '2023-12-23 12:34:56',
             'is_publish' => true,
         ];
 
@@ -101,7 +100,6 @@ class StoreTest extends TestCase
                     'body' => ['bodyは必ず指定してください。'],
                     'parent_entry_id' => ['parent entry idは必ず指定してください。'],
                     'post_user_id' => ['post user idは必ず指定してください。'],
-                    'post_at' => ['post atは必ず指定してください。'],
                     'is_publish' => ['is publishは必ず指定してください。'],
                 ],
             ],
@@ -111,13 +109,11 @@ class StoreTest extends TestCase
                     'body' => 'nop',
                     'parent_entry_id' => 'X',
                     'post_user_id' => 'X',
-                    'post_at' => '2023/12/23 12:34:56',
                     'is_publish' => 'X',
                 ],
                 'errors' => [
                     'parent_entry_id' => ['parent entry idは整数で指定してください。'],
                     'post_user_id' => ['post user idは整数で指定してください。'],
-                    'post_at' => ['post atはY-m-d H:i:s形式で指定してください。'],
                     'is_publish' => ['is publishは、trueかfalseを指定してください。'],
                 ],
             ],
@@ -145,7 +141,6 @@ class StoreTest extends TestCase
             'title' => $entry->title,
             'body' => 'nop',
             'parent_entry_id' => 1,
-            'post_at' => '2023-12-23 12:34:56',
             'post_user_id' => $user->id,
             'is_publish' => true,
         ];
