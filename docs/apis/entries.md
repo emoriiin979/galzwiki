@@ -191,6 +191,10 @@ GET /entries/{id}
 PATCH /entries/{id}
 ```
 
+### Parameters
+
+- id: `number` (required)
+
 ### Requests
 
 ```
@@ -246,5 +250,29 @@ PATCH /entries/{id}
       'updated atはY-m-d H:i:s形式で指定してください。',
     ],
   ],
+}
+```
+
+## delete - 事項の削除
+
+```
+DELETE /entries/{id}
+```
+
+### Parameters
+
+- id: `number` (required)
+
+### Response `204`
+
+```
+(No Contents)
+```
+
+### Response `404`
+
+```
+{
+  'message': 'データが存在しません。',
 }
 ```
