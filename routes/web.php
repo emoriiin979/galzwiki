@@ -29,26 +29,22 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::get('/', function () {
-//     return Redirect::route('search');
-// })->name('index');
+Route::get('/wiki/search', function () {
+    return Inertia::render('Wiki/Search');
+})->name('wiki.search');
 
-Route::get('/search', function () {
-    return Inertia::render('Search');
-})->name('search');
-
-Route::get('/detail/{pageId}', function (int $pageId) {
-    return Inertia::render('Detail', [
+Route::get('/wiki/detail/{pageId}', function (int $pageId) {
+    return Inertia::render('Wiki/Detail', [
         'pageId' => $pageId,
     ]);
-});
+})->name('wiki.search');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/edit/{pageId}', function (int $pageId) {
-        return Inertia::render('Edit', [
+    Route::get('/wiki/edit/{pageId}', function (int $pageId) {
+        return Inertia::render('Wiki/Edit', [
             'pageId' => $pageId,
         ]);
-    });
+    })->name('wiki.edit');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
