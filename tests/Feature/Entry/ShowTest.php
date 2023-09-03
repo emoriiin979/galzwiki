@@ -37,20 +37,17 @@ class ShowTest extends TestCase
                 'id' => 1,
                 'parent_entry_id' => 2,
                 'post_user_id' => $user->id,
-                'post_at' => '2023-12-23 12:34:56',
                 'is_publish' => true,
             ],
             [
                 'id' => 2,
                 'parent_entry_id' => 3,
                 'post_user_id' => $user->id,
-                'post_at' => '2023-12-23 12:34:56',
                 'is_publish' => true,
             ],
             [
                 'id' => 3,
                 'post_user_id' => $user->id,
-                'post_at' => '2023-12-23 12:34:56',
                 'is_publish' => true,
             ],
         )->create();
@@ -69,7 +66,6 @@ class ShowTest extends TestCase
             'subtitle' => $entries[0]->subtitle,
             'body' => $entries[0]->body,
             'post_user_id' => $entries[0]->post_user_id,
-            'post_at' => $entries[0]->post_at,
             'is_publish' => $entries[0]->is_publish,
             'parents' => [
                 [

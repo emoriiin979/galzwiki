@@ -50,20 +50,17 @@ class IndexTest extends TestCase
                 'id' => 1,
                 'parent_entry_id' => 2,
                 'post_user_id' => $user->id,
-                'post_at' => '2023-12-23 12:34:56',
                 'is_publish' => true,
             ],
             [
                 'id' => 2,
                 'parent_entry_id' => 3,
                 'post_user_id' => $user->id,
-                'post_at' => '2023-12-23 12:34:56',
                 'is_publish' => true,
             ],
             [
                 'id' => 3,
                 'post_user_id' => $user->id,
-                'post_at' => '2023-12-23 12:34:56',
                 'is_publish' => true,
             ],
         )->create();
@@ -80,7 +77,6 @@ class IndexTest extends TestCase
             'id' => $entries[0]->id,
             'title' => $entries[0]->title,
             'subtitle' => $entries[0]->subtitle,
-            'post_at' => $entries[0]->post_at,
             'is_publish' => $entries[0]->is_publish,
             'parents' => [
                 [
@@ -99,35 +95,6 @@ class IndexTest extends TestCase
 
     /**
      * 事項一覧取得 正常系テスト
-     * 投稿日時が過ぎていない事項が取得できないこと
-     * GET /entries -> 200
-     */
-    public function test_index_200_filterBeforePublishEntry(): void
-    {
-        // Arrange
-        /** @var string $url */
-        $url = $this->endpoint;
-
-        /** @var User $user */
-        $user = User::factory()->create();
-
-        Entry::factory()->create([
-            'post_user_id' => $user->id,
-            'post_at' => '2023-12-23 12:34:57',
-            'is_publish' => true,
-        ]);
-
-        // Act
-        $response = $this->get($url, $this->headers);
-
-        // Assert
-        $response->assertStatus(200);
-        $response->assertJsonPath('data', []);
-        $response->assertJsonPath('meta.total', 0);
-    }
-
-    /**
-     * 事項一覧取得 正常系テスト
      * 未公開事項が取得できないこと
      * GET /entries -> 200
      */
@@ -142,7 +109,6 @@ class IndexTest extends TestCase
 
         Entry::factory()->create([
             'post_user_id' => $user->id,
-            'post_at' => '2023-12-23 12:34:56',
             'is_publish' => false,
         ]);
 
@@ -172,7 +138,6 @@ class IndexTest extends TestCase
         /** @var Entry $entry */
         $entry = Entry::factory()->create([
             'post_user_id' => $user->id,
-            'post_at' => '2023-12-23 12:34:57',
             'is_publish' => false,
         ]);
 

@@ -51,19 +51,12 @@ class EntryService
      */
     private function buildQueryForFetchByParams(array $params): Builder
     {
-        /** @var string $now */
-        $now = Carbon::now()->format('Y-m-d H:i:s');
-
         /** @var Builder $query */
         $query = $this->model->query();
 
-        $query->where(function ($query) use ($params, $now) {
-            // 公開中かつ投稿日が過ぎている記事のみ取得
-            $query->where(function ($query) use ($now) {
-                $query
-                    ->where('entries.post_at', '<=', $now)
-                    ->where('entries.is_publish', 1);
-            });
+        $query->where(function ($query) use ($params) {
+            // 公開中の事項のみ取得
+            $query->where('entries.is_publish', 1);
 
             // ログイン中は自分が投稿した全記事を取得
             if ($authUserId = Arr::get($params, 'auth_user_id')) {
@@ -85,9 +78,7 @@ class EntryService
             });
         }
 
-        $query
-            ->orderBy('entries.post_at', 'desc')
-            ->orderBy('entries.updated_at', 'desc');
+        $query->orderBy('entries.updated_at', 'desc');
         
         return $query;
     }

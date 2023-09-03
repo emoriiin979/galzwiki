@@ -30,7 +30,6 @@ class EntryStoreRequest extends FormRequest
             'body'            => ['string', 'required'],
             'parent_entry_id' => ['integer', 'required'],
             'post_user_id'    => ['integer', 'required'],
-            'post_at'         => ['date_format:Y-m-d H:i:s', 'required'],
             'is_publish'      => ['boolean', 'required'],
         ];
     }

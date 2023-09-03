@@ -22,7 +22,6 @@ class EntryFactory extends Factory
             'body'            => $this->faker->realText($maxNbChars = 128),
             'parent_entry_id' => null,
             'post_user_id'    => null,  // 呼び出し元で必ず指定する
-            'post_at'         => $this->faker->dateTime($timezone = 'Asia/Tokyo'),
             'is_publish'      => true,
         ];
     }

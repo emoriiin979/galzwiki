@@ -40,7 +40,6 @@ GET /entries?keywords[0]=単語1&keywords[1]=単語2&operator=and&page=1
       'id': 3,
       'title': 'EC2',
       'subtitle': 'Elastic Compute Cloud',
-      'post_at': '2023-12-23 12:00:00',
       'is_publish': true,
       'parents': [
         {
@@ -101,7 +100,6 @@ POST /entries
   'body': 'Amazonが提供する計算資源を用いて...',
   'parent_entry_id': 1,
   'post_user_id': 1,
-  'post_at': '2023-12-23 12:34:56',
   'is_publish': true,
 }
 ```
@@ -134,10 +132,6 @@ POST /entries
       'post user idは必ず指定してください。',
       'post user idは整数で指定してください。',
     ],
-    'post_at': [
-      'post atは必ず指定してください。',
-      'post atはY-m-d H:i:s形式で指定してください。',
-    ],
     'is_publish': [
       'is publishは必ず指定してください。',
       'is publishは、trueかfalseを指定してください。',
@@ -165,7 +159,6 @@ GET /entries/{id}
   'subtitle': 'Elastic Compute Cloud',
   'body': 'Amazonが提供する計算資源を用いて...',
   'post_user_id': 1,
-  'post_at': '2023-12-23 12:00:00',
   'is_publish': true,
   'parents': [
     {
@@ -243,18 +236,6 @@ PATCH /entries/{id}
     ],
     'body': [
       'bodyは必ず指定してください。',
-    ],
-    'parent_entry_id': [
-      'parent entry idは必ず指定してください。',
-      'parent entry idは整数で指定してください。',
-    ],
-    'post_user_id': [
-      'post user idは必ず指定してください。',
-      'post user idは整数で指定してください。',
-    ],
-    'post_at': [
-      'post atは必ず指定してください。',
-      'post atはY-m-d H:i:s形式で指定してください。',
     ],
     'is_publish': [
       'is publishは必ず指定してください。',

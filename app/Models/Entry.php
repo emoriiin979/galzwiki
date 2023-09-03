@@ -25,16 +25,6 @@ class Entry extends Model
     ];
 
     /**
-     * 登録日時取得
-     *
-     * @return string 登録日時(Y-m-d H:i:s形式)
-     */
-    public function getEntryAtAttribute($value)
-    {
-        return $value ? Carbon::parse($value)->format('Y-m-d H:i:s') : null;
-    }
-
-    /**
      * 更新日時取得
      *
      * @return string 更新日時(Y-m-d H:i:s形式)

@@ -20,7 +20,6 @@ class EntryResource extends JsonResource
             'subtitle' => $this->subtitle,
             'body' => $this->body,
             'post_user_id' => $this->post_user_id,
-            'post_at' => $this->post_at,
             'is_publish' => $this->is_publish,
             'parents' => $this->fetchParents($this),
         ];
