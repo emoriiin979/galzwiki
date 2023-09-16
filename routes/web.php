@@ -35,9 +35,9 @@ Route::get('/wiki/search', function () {
 
 Route::get('/wiki/detail/{pageId}', function (int $pageId) {
     return Inertia::render('Wiki/Detail', [
-        'pageId' => $pageId,
+        'page_id' => $pageId,
     ]);
-})->name('wiki.search');
+})->name('wiki.detail');
 
 Route::middleware('auth')->group(function () {
     Route::get('/wiki/edit/{pageId}', function (int $pageId) {
