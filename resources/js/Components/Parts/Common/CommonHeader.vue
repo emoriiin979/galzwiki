@@ -34,7 +34,7 @@ const isShowLinkButton = (link) => {
         <v-container>
             <v-row>
                 <v-col cols="auto">
-                    <v-btn href="/" style="text-transform: none">
+                    <v-btn href="/wiki/search" style="text-transform: none">
                         {{ appName }}
                     </v-btn>
                 </v-col>
