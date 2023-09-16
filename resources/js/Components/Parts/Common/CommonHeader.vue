@@ -1,9 +1,28 @@
 <script setup>
+/**
+ * アプリケーション名（configから取得）
+ * @type {string}
+ */
 const appName = import.meta.env.VITE_APP_NAME;
+
+/**
+ * 強調色（configから取得）
+ * @type {string}
+ */
 const accentColor = import.meta.env.VITE_SITE_ACCENT_COLOR;
+
+/**
+ * メニューに表示する内容
+ * @type {{label: string, href: string, showFlag: string|null}[]}
+ */
 const links = [
     { label: 'Login', href: '/login', showFlag: "showLoginButton" },
 ];
+
+/**
+ * メニュー内容の表示チェック
+ * @param {label: string, href: string, showFlag: string|null} link
+ */
 const isShowLinkButton = (link) => {
     const url = new URL(window.location.href);
     return !link.showFlag || url.searchParams.has(link.showFlag);

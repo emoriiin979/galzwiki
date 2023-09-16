@@ -3,15 +3,29 @@ import { onMounted } from '@vue/runtime-core';
 import { ref } from 'vue';
 import axios from 'axios';
 
+/**
+ * 一覧取得のAPIレスポンス
+ * @type {object}
+ */
 const response = ref({
     meta: {
         last_page: 10,
     },
 });
+
+/**
+ * リクエストに渡すパラメータ
+ * @type {{keywords: string, page: number}}
+ */
 const params = ref({
     keywords: '',
     page: 1,
 });
+
+/**
+ * 検索実行
+ * @param {number} page
+ */
 const find = (page) => {
     params.value.page = page;
     axios
@@ -25,6 +39,11 @@ const find = (page) => {
             response.value = result.data;
         });
 };
+
+/**
+ * パンくずリスト作成
+ * @param {object} entry
+ */
 const showTopicList = (entry) => {
     let buf = [];
     entry.parents.sort((a, b) => {
@@ -35,7 +54,12 @@ const showTopicList = (entry) => {
     buf.push(entry.title);
     return buf.join(' > ');
 };
+
+/**
+ * マウント直後に実行
+ */
 onMounted(() => {
+    // 初期検索
     find(1);
 });
 </script>
