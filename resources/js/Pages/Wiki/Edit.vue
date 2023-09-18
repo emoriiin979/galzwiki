@@ -1,21 +1,30 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import BaseLayout from '@/Layouts/BaseLayout.vue';
+import WikiEdit from '@/Components/Modules/Wiki/WikiEdit.vue';
 
+/**
+ * props.
+ * @type {object}
+ */
+const props = defineProps({
+    page_id: Number,
+});
 </script>
 
 <template>
-    <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Edit</h2>
-        </template>
+    <Head title="編集" />
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">Edit</div>
-                </div>
-            </div>
-        </div>
-    </AuthenticatedLayout>
+    <base-layout>
+        <v-row>
+            <v-col cols="9">
+                <wiki-edit
+                    :page_id="Number(props.page_id)"
+                />
+            </v-col>
+            <v-col cols="3">
+                <!-- -->
+            </v-col>
+        </v-row>
+    </base-layout>
 </template>

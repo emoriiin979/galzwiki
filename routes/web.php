@@ -16,38 +16,38 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+Route::redirect('/', '/wiki/search');
+
+Route::group(['prefix' => '/wiki', 'as' => 'wiki.'], function () {
+    Route::get('/search', function () {
+        return Inertia::render('Wiki/Search');
+    })->name('search');
+
+    Route::get('/detail/{id}', function (int $id) {
+        return Inertia::render('Wiki/Detail', [
+            'page_id' => $id,
+        ]);
+    })->name('detail');
+
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/edit/{id}', function (int $id) {
+            return Inertia::render('Wiki/Edit', [
+                'page_id' => $id,
+            ]);
+        })->name('edit');
+    });
 });
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/wiki/search', function () {
-    return Inertia::render('Wiki/Search');
-})->name('wiki.search');
-
-Route::get('/wiki/detail/{pageId}', function (int $pageId) {
-    return Inertia::render('Wiki/Detail', [
-        'page_id' => $pageId,
-    ]);
-})->name('wiki.detail');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/wiki/edit/{pageId}', function (int $pageId) {
-        return Inertia::render('Wiki/Edit', [
-            'pageId' => $pageId,
-        ]);
-    })->name('wiki.edit');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::group(['prefix' => '/profile', 'as' => 'profile.'], function () {
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
 });
 
 require __DIR__.'/auth.php';
