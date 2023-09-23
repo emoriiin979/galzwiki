@@ -40,11 +40,11 @@ const isShowLinkButton = (link) => {
                 </v-col>
                 <v-spacer />
                 <v-col cols="auto">
-                    <v-btn v-for="link in links" :key="link" :href="link.href">
-                        <div v-if="isShowLinkButton(link)">
+                    <div v-for="link in links" :key="link">
+                        <v-btn v-if="isShowLinkButton(link)" :href="link.href">
                             {{ link.label }}
-                        </div>
-                    </v-btn>
+                        </v-btn>
+                    </div>
                 </v-col>
             </v-row>
         </v-container>
