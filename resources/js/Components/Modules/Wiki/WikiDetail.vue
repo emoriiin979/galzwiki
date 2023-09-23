@@ -39,15 +39,16 @@ const commitDelete = (entry) => {
 }
 
 /**
- * マウント直後に実行
+ * 初回実行
  */
-onMounted(() => {
-    axios
-        .get('/api/entries/' + page.props.page_id)
-        .then((result) => {
-            entry.value = result.data.data;
-        });
-});
+axios
+    .get('/api/entries/' + page.props.page_id)
+    .then((result) => {
+        entry.value = result.data.data;
+    })
+    .catch((error) => {
+        // nop.
+    });
 </script>
 
 <template>
@@ -86,7 +87,7 @@ onMounted(() => {
                   class="d-flex mx-auto px-8 py-8"
                   rounded
                 >
-                    <div>
+                    <div v-if="entry.id">
                         <h2 class="text-h4 text-orange">
                             {{ entry.title }}
                         </h2>
@@ -126,6 +127,13 @@ onMounted(() => {
                         >
                             削除
                         </v-btn>
+                    </div>
+                    <div v-else>
+                        <v-alert
+                            type="info"
+                            text="データが存在しません。"
+                            variant="tonal"
+                        />
                     </div>
                 </v-sheet>
             </v-col>

@@ -77,17 +77,19 @@ const commit = (entry) => {
 };
 
 /**
- * マウント直後に実行
+ * 初回実行
  */
-onMounted(() => {
-    if (mode.value === 'edit') {
-        axios
-            .get('/api/entries/' + page.props.page_id)
-            .then((result) => {
-                entry.value = result.data.data;
-            });
-    }
-});
+axios
+    .get('/api/entries/' + page.props.page_id)
+    .then((result) => {
+        if (mode.value === 'edit') {
+            entry.value = result.data.data;
+        }
+        entry.value.fetched_id = result.data.data.id;
+    })
+    .catch((error) => {
+        // nop.
+    });
 </script>
 
 <template>
@@ -127,6 +129,7 @@ onMounted(() => {
                   rounded
                 >
                     <v-form
+                        v-if="entry.fetched_id"
                         class="v-col-12"
                         @submit.prevent
                     >
@@ -179,6 +182,13 @@ onMounted(() => {
                             戻る
                         </v-btn>
                     </v-form>
+                    <div v-else>
+                        <v-alert
+                            type="info"
+                            :text="(mode === 'add' ? '親' : '') + 'データが存在しません。'"
+                            variant="tonal"
+                        />
+                    </div>
                 </v-sheet>
             </v-col>
         </v-row>
