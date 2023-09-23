@@ -27,14 +27,18 @@ Route::group(['prefix' => '/wiki', 'as' => 'wiki.'], function () {
         return Inertia::render('Wiki/Detail', [
             'page_id' => $id,
         ]);
-    })->name('detail');
+    })
+        ->where(['id' => '[0-9]+'])
+        ->name('detail');
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/edit/{id}', function (int $id) {
             return Inertia::render('Wiki/Edit', [
                 'page_id' => $id,
             ]);
-        })->name('edit');
+        })
+            ->where(['id' => '[0-9]+'])
+            ->name('edit');
     });
 });
 
