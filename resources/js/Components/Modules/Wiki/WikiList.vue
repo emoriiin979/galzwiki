@@ -82,7 +82,10 @@ onMounted(() => {
             </v-col>
         </v-row>
         <v-row align="center">
-            <v-col v-if="response.data" cols="12">
+            <v-col
+                v-if="response.data && response.data.length !== 0"
+                cols="12"
+            >
                 <v-pagination
                     v-model="params.page"
                     :length="response.meta.last_page"
@@ -111,6 +114,16 @@ onMounted(() => {
                     :length="response.meta.last_page"
                     :total-visible="6"
                     @update:modelValue="find(params.page)"
+                />
+            </v-col>
+            <v-col
+                v-else
+                cols="12"
+            >
+                <v-alert
+                    type="info"
+                    text="データが見つかりませんでした。"
+                    variant="tonal"
                 />
             </v-col>
         </v-row>
