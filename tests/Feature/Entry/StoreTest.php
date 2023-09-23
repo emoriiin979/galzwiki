@@ -106,6 +106,7 @@ class StoreTest extends TestCase
             [
                 'commitData' => [
                     'title' => 'nop',
+                    'subtitle' => '',
                     'body' => 'nop',
                     'parent_entry_id' => 'X',
                     'post_user_id' => 'X',

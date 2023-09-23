@@ -158,8 +158,10 @@ GET /entries/{id}
   'title': 'EC2',
   'subtitle': 'Elastic Compute Cloud',
   'body': 'Amazonが提供する計算資源を用いて...',
+  'parent_entry_id': 2,
   'post_user_id': 1,
   'is_publish': true,
+  'updated_at': '2023-12-23 12:34:56',
   'parents': [
     {
       'id': 2,
