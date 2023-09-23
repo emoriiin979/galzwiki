@@ -65,8 +65,10 @@ class ShowTest extends TestCase
             'title' => $entries[0]->title,
             'subtitle' => $entries[0]->subtitle,
             'body' => $entries[0]->body,
+            'parent_entry_id' => $entries[0]->parent_entry_id,
             'post_user_id' => $entries[0]->post_user_id,
             'is_publish' => $entries[0]->is_publish,
+            'updated_at' => $entries[0]->updated_at,
             'parents' => [
                 [
                     'id' => $entries[1]->id,

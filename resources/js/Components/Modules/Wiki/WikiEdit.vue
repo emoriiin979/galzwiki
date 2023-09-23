@@ -67,15 +67,13 @@ const backDetail = () => {
  * @param {object}
  */
 const commit = (entry) => {
-    console.log(entry);
-    axios
-        .patch('/api/entries/' + page.props.page_id, entry)
-        .then((result) => {
-            // nop.
-        })
-    // リダイレクト
-    const url = new URL(window.location.href);
-    location.href = url;
+    if (mode.value === 'add') {
+        axios.post('/api/entries', entry);
+        location.href = location.origin + '/wiki/search';
+    } else {
+        axios.patch('/api/entries/' + page.props.page_id, entry);
+        backDetail();
+    }
 };
 
 /**

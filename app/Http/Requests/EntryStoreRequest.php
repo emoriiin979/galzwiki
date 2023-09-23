@@ -26,7 +26,7 @@ class EntryStoreRequest extends FormRequest
     {
         return [
             'title'           => ['string', 'required', 'unique:entries'],
-            'subtitle'        => ['string'],
+            'subtitle'        => ['string', 'nullable'],
             'body'            => ['string', 'required'],
             'parent_entry_id' => ['integer', 'required'],
             'post_user_id'    => ['integer', 'required'],

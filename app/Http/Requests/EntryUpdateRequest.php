@@ -24,7 +24,7 @@ class EntryUpdateRequest extends FormRequest
     {
         return [
             'title'           => ['string', 'required', Rule::unique('entries')->ignore($this->id)],
-            'subtitle'        => ['string'],
+            'subtitle'        => ['string', 'nullable'],
             'body'            => ['string', 'required'],
             'is_publish'      => ['boolean', 'required'],
             'updated_at'      => ['date_format:Y-m-d H:i:s', 'required'],

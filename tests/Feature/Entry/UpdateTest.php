@@ -202,6 +202,7 @@ class UpdateTest extends TestCase
             [
                 'commitData' => [
                     'title' => 'nop',
+                    'subtitle' => '',
                     'body' => 'nop',
                     'is_publish' => 'X',
                     'updated_at' => '2023/12/23 12:34:56',
