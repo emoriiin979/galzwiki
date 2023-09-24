@@ -94,7 +94,9 @@ axios
         if (mode.value === 'edit') {
             entry.value = result.data.data;
         }
-        entry.value.fetched_id = result.data.data.id;
+        if (result.data.data.post_user_id === page.props.auth.user.id) {
+            entry.value.fetched_id = result.data.data.id;
+        }
     })
     .catch((error) => {
         // nop.
