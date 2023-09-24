@@ -142,7 +142,7 @@ class IndexTest extends TestCase
         ]);
 
         // Act
-        $this->actingAs(User::find($user->id));
+        $this->actingAs($user);
         $response = $this->get($url, $this->headers);
         $this->post('logout');
 

@@ -87,7 +87,7 @@ class ShowTest extends TestCase
     /**
      * 事項詳細取得 異常系テスト
      * 存在しないIDが指定された場合はエラーが返されること
-     * GET /entries/{id} -> 404|405
+     * GET /entries/{id} -> 404
      *
      * @dataProvider notFoundDataProvider
      * @param string $url
@@ -111,5 +111,61 @@ class ShowTest extends TestCase
                 'url' => $this->endpoint . '/999',
             ],
         ];
+    }
+
+    /**
+     * 事項詳細取得 異常系テスト
+     * 未公開事項のIDが指定された場合はエラーが返されること
+     * GET /entries/{id} -> 404
+     */
+    public function test_show_404_filterUnpublishEntry(): void
+    {
+        // Arrange
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Entry $entry */
+        $entry = Entry::factory()->create([
+            'post_user_id' => $user->id,
+            'is_publish' => false,
+        ]);
+
+        /** @var string $url */
+        $url = $this->endpoint . '/' . $entry->id;
+
+        // Act
+        $response = $this->get($url, $this->headers);
+
+        // Assert
+        $response->assertStatus(404);
+    }
+
+    /**
+     * 事項詳細取得 異常系テスト
+     * 未公開かつ自分が投稿した事項のIDが指定された場合はエラーが出ないこと
+     * GET /entries/{id} -> 200
+     */
+    public function test_show_200_getMyEntry(): void
+    {
+        // Arrange
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Entry $entry */
+        $entry = Entry::factory()->create([
+            'post_user_id' => $user->id,
+            'is_publish' => false,
+        ]);
+
+        /** @var string $url */
+        $url = $this->endpoint . '/' . $entry->id;
+
+        // Act
+        $this->actingAs($user);
+        $response = $this->get($url, $this->headers);
+        $this->post('logout');
+
+        // Assert
+        $response->assertStatus(200);
     }
 }

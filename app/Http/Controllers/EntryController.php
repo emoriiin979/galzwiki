@@ -35,10 +35,6 @@ class EntryController extends Controller
             'operator',
         ]);
 
-        if (auth()->user()) {
-            $params['auth_user_id'] = auth()->user()->id;
-        }
-
         /** @var LengthAwarePaginator $entries */
         $entries = $this->service->fetchByParamsWithPaginator($params);
 

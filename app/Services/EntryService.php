@@ -54,13 +54,13 @@ class EntryService
         /** @var Builder $query */
         $query = $this->model->query();
 
-        $query->where(function ($query) use ($params) {
+        $query->where(function ($query) {
             // 公開中の事項のみ取得
             $query->where('entries.is_publish', 1);
 
             // ログイン中は自分が投稿した全記事を取得
-            if ($authUserId = Arr::get($params, 'auth_user_id')) {
-                $query->orWhere('entries.post_user_id', $authUserId);
+            if (auth()->user()) {
+                $query->orWhere('entries.post_user_id', auth()->user()->id);
             }
         });
 
@@ -93,6 +93,16 @@ class EntryService
     {
         /** @var Entry $entry */
         $entry = $this->model->findOrFail($id);
+
+        if (
+            ! $entry->is_publish
+            && (
+                ! auth()->user()
+                || $entry->post_user_id !== auth()->user()->id
+            )
+        ) {
+            abort(404);
+        }
 
         return $entry;
     }
