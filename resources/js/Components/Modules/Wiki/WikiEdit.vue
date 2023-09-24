@@ -9,6 +9,15 @@ import { ref, computed, onMounted } from "vue";
 const page = usePage();
 
 /**
+ * ページID
+ * @type {number}
+ */
+const pageId = computed(() => {
+    const url = new URL(location.href);
+    return url.searchParams.get('page_id');
+});
+
+/**
  * モード（add:登録／edit:更新）
  * @type {string}
  */
@@ -37,7 +46,7 @@ const entry = ref(mode.value === 'add' ? {
     title: '',
     subtitle: '',
     body: '',
-    parent_entry_id: page.props.page_id,
+    parent_entry_id: pageId.value,
     post_user_id: page.props.auth.user.id,
     is_publish: false,
 } : {});
@@ -59,7 +68,7 @@ const rules = {
  * リダイレクト
  */
 const backDetail = () => {
-    location.href = location.origin + '/wiki/detail/' + page.props.page_id;
+    location.href = location.origin + '/wiki/detail?page_id=' + pageId.value;
 }
 
 /**
@@ -71,7 +80,7 @@ const commit = (entry) => {
         axios.post('/api/entries', entry);
         location.href = location.origin + '/wiki/search';
     } else {
-        axios.patch('/api/entries/' + page.props.page_id, entry);
+        axios.patch('/api/entries/' + pageId.value, entry);
         backDetail();
     }
 };
@@ -80,7 +89,7 @@ const commit = (entry) => {
  * 初回実行
  */
 axios
-    .get('/api/entries/' + page.props.page_id)
+    .get('/api/entries/' + pageId.value)
     .then((result) => {
         if (mode.value === 'edit') {
             entry.value = result.data.data;

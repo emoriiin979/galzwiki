@@ -1,12 +1,15 @@
 <script setup>
-import { usePage } from "@inertiajs/vue3";
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 /**
- * hooks.
+ * ページID
+ * @type {number}
  */
-const page = usePage();
+const pageId = computed(() => {
+    const url = new URL(location.href);
+    return url.searchParams.get('page_id');
+});
 
 /**
  * 事項の詳細データ
@@ -25,8 +28,8 @@ const deleteDialog = ref(false);
  * @param {string}
  */
 const jump = (mode) => {
-    const url = location.origin + '/wiki/edit/' + page.props.page_id;
-    location.href = url + '?mode=' + mode;
+    const url = location.origin + '/wiki/edit?page_id=' + pageId.value;
+    location.href = url + '&mode=' + mode;
 }
 
 /**
@@ -34,15 +37,15 @@ const jump = (mode) => {
  * @param {object}
  */
 const commitDelete = (entry) => {
-    axios.delete('/api/entries/' + page.props.page_id);
-    location.href = location.origin + '/wiki/detail/' + entry.parent_entry_id;
+    axios.delete('/api/entries/' + pageId.value);
+    location.href = location.origin + '/wiki/detail?page_id=' + entry.parent_entry_id;
 }
 
 /**
  * 初回実行
  */
 axios
-    .get('/api/entries/' + page.props.page_id)
+    .get('/api/entries/' + pageId.value)
     .then((result) => {
         entry.value = result.data.data;
     })
