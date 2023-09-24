@@ -97,7 +97,7 @@ onMounted(() => {
                     flat
                     v-for="entry in response.data"
                     :key="entry"
-                    :href="'/wiki/detail/' + entry.id"
+                    :href="'/wiki/detail?page_id=' + entry.id"
                 >
                     <v-card-title>
                         {{ entry.title }}

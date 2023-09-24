@@ -23,22 +23,14 @@ Route::group(['prefix' => '/wiki', 'as' => 'wiki.'], function () {
         return Inertia::render('Wiki/Search');
     })->name('search');
 
-    Route::get('/detail/{id}', function (int $id) {
-        return Inertia::render('Wiki/Detail', [
-            'page_id' => $id,
-        ]);
-    })
-        ->where(['id' => '[0-9]+'])
-        ->name('detail');
+    Route::get('/detail', function () {
+        return Inertia::render('Wiki/Detail');
+    })->name('detail');
 
     Route::middleware(['auth'])->group(function () {
-        Route::get('/edit/{id}', function (int $id) {
-            return Inertia::render('Wiki/Edit', [
-                'page_id' => $id,
-            ]);
-        })
-            ->where(['id' => '[0-9]+'])
-            ->name('edit');
+        Route::get('/edit', function () {
+            return Inertia::render('Wiki/Edit');
+        })->name('edit');
     });
 });
 
